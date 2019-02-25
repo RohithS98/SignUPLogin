@@ -52,15 +52,25 @@
         android:layout_below="@+id/openTime"
         android:hint="Set Closing Time" />
 
+    <Button
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/getloc1"
+        android:layout_below="@+id/closeTime"
+        android:text="Set Location"
+        android:layout_centerHorizontal="true"
+        android:onClick="getLoc"/>
+
     <TextView
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_below="@+id/closeTime"
+        android:layout_below="@+id/getloc1"
         android:hint="Location: "
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:textSize="20dp"/>
 
     <TextView
