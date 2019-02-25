@@ -146,7 +146,6 @@ public class SignUp2Activity extends AppCompatActivity {
             //locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,locationListener,null);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             mLocation.setText("Location : "+locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).toString());
-
         }
     }
 
