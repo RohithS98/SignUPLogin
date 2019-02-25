@@ -1,14 +1,31 @@
 package com.parse.starter;
 
+import android.Manifest;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -16,6 +33,20 @@ public class SignUp2Activity extends AppCompatActivity {
 
     CheckBox c1,c2,c3,c4;
     EditText t1, openTime, closeTime;
+    TextView mLocation;
+
+    LocationManager locationManager;
+    LocationListener locationListener;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                //locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,locationListener,null);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +61,7 @@ public class SignUp2Activity extends AppCompatActivity {
         openTime.setInputType(InputType.TYPE_NULL);
         closeTime = (EditText)findViewById(R.id.closeTime);
         closeTime.setInputType(InputType.TYPE_NULL);
+        mLocation = (TextView)findViewById(R.id.location);
 
         openTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +88,53 @@ public class SignUp2Activity extends AppCompatActivity {
                 timePickerDialog.show();
             }
         });
+
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        locationListener = new LocationListener() {
+
+            @Override
+            public void onLocationChanged(Location location) {
+
+
+
+                Log.i("Location-Latitude", String.valueOf(location.getLatitude()));
+                Log.i("Location-Longitude", String.valueOf(location.getLongitude()));
+                ParseObject latlng=new ParseObject("Latlng");
+                latlng.put("Latitude",String.valueOf(location.getLatitude()));
+                latlng.put("Longitude",String.valueOf(location.getLongitude()));
+                mLocation.setText(latlng.toString());
+                latlng.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e==null){
+                            Log.i("successfull","saved");
+                        }
+                        else{
+                            Log.i("Failed",e.toString());
+                        }
+                    }
+                });
+                locationManager.removeUpdates(this);
+
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+            }
+
+
+        };
     }
 
     public void submitDetails(View view) {
@@ -68,7 +147,7 @@ public class SignUp2Activity extends AppCompatActivity {
             b2 = c2.isChecked();
             b3 = c3.isChecked();
             b4 = c4.isChecked();
-            String checked = b1.toString() + " " + b2.toString() + " " + b3.toString() + b4.toString();
+            String checked = b1.toString() + " " + b2.toString() + " " + b3.toString() + " " + b4.toString();
             Toast.makeText(SignUp2Activity.this, checked, Toast.LENGTH_SHORT).show();
         }
     }
