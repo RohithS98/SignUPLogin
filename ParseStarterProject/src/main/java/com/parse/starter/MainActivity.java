@@ -37,7 +37,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public void goLog(View view){
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Intent intent;
+        if(ParseUser.getCurrentUser() != null){
+            intent = new Intent(MainActivity.this, HospitalScreenActivity.class);
+        }
+        else{
+            intent = new Intent(MainActivity.this, LoginActivity.class);
+        }
         startActivity(intent);
     }
 

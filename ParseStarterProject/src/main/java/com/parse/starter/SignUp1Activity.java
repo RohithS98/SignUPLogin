@@ -26,9 +26,7 @@ public class SignUp1Activity extends AppCompatActivity {
         EditText passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 
         if (usernameEditText.getText().toString().matches("") || passwordEditText.getText().toString().matches("")) {
-
             Toast.makeText(this, "A username and password are required.", Toast.LENGTH_SHORT).show();
-
         }
         else{
             ParseUser user = new ParseUser();
@@ -49,5 +47,10 @@ public class SignUp1Activity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void goBack(View view){
+        Intent intent = new Intent(SignUp1Activity.this, MainActivity.class);
+        startActivity(intent);
     }
 }
