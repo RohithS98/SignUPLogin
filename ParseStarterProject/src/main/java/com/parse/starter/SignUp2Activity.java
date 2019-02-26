@@ -34,7 +34,7 @@ public class SignUp2Activity extends AppCompatActivity {
 
     CheckBox c1,c2,c3,c4;
     EditText t1, openTime, closeTime;
-    TextView mLocation;
+    //TextView mLocation;
 
     LocationManager locationManager;
     LocationListener locationListener;
@@ -62,7 +62,7 @@ public class SignUp2Activity extends AppCompatActivity {
         openTime.setInputType(InputType.TYPE_NULL);
         closeTime = (EditText)findViewById(R.id.closeTime);
         closeTime.setInputType(InputType.TYPE_NULL);
-        mLocation = (TextView)findViewById(R.id.location);
+        // mLocation = (TextView)findViewById(R.id.location);
 
         openTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,7 +145,7 @@ public class SignUp2Activity extends AppCompatActivity {
             // we have permission!
             //locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,locationListener,null);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-            mLocation.setText("Location : "+locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).toString());
+            //mLocation.setText("Location : "+String.valueOf(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).toString()));
         }
     }
 
@@ -153,7 +153,14 @@ public class SignUp2Activity extends AppCompatActivity {
         if(t1.getText().toString().matches("")){
             Toast.makeText(this, "Please Enter Hospital ID", Toast.LENGTH_SHORT).show();
         }
+        else if(openTime.getText().toString().matches("")){
+            Toast.makeText(this, "Please Enter Opening Time", Toast.LENGTH_SHORT).show();
+        }
+        else if(closeTime.getText().toString().matches("")){
+            Toast.makeText(this, "Please Enter Closing Time", Toast.LENGTH_SHORT).show();
+        }
         else{
+            getLoc(view);
             Boolean b1, b2, b3, b4;
             b1 = c1.isChecked();
             b2 = c2.isChecked();
