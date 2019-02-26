@@ -56,7 +56,7 @@
         android:onClick="signUp" />
 
     <Button
-        android:text="Go Back"
+        android:text="Back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/logInButton"
