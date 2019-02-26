@@ -1,8 +1,10 @@
 package com.parse.starter;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -168,6 +170,8 @@ public class SignUp2Activity extends AppCompatActivity {
             b4 = c4.isChecked();
             String checked = b1.toString() + " " + b2.toString() + " " + b3.toString() + " " + b4.toString();
             Toast.makeText(SignUp2Activity.this, checked, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(SignUp2Activity.this, HospitalScreenActivity.class);
+            startActivity(intent);
         }
     }
 }
