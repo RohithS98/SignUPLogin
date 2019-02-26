@@ -1,5 +1,7 @@
 package com.parse.starter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -40,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
                     if (user != null) {
                         Log.i("Signup", "Login successful");
                         Toast.makeText(LoginActivity.this, "Successful Log In", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, HospitalScreenActivity.class);
+                        startActivity(intent);
                     } else {
                         Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
