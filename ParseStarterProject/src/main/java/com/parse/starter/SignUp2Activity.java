@@ -35,13 +35,45 @@ import com.parse.SaveCallback;
 
 import org.w3c.dom.Text;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class SignUp2Activity extends AppCompatActivity {
 
+    public class SetTime implements View.OnFocusChangeListener, TimePickerDialog.OnTimeSetListener {
+
+        private EditText editText;
+        private Calendar myCalendar;
+        private Context ctx;
+
+        public SetTime(EditText editText, Context ctx){
+            this.editText = editText;
+            this.ctx = ctx;
+            this.editText.setOnFocusChangeListener(this);
+            this.myCalendar = Calendar.getInstance();
+        }
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if(hasFocus){
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+                int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
+                int minute = myCalendar.get(Calendar.MINUTE);
+                new TimePickerDialog(this.ctx, this, hour, minute, false).show();
+            }
+        }
+
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            this.editText.setText( hourOfDay + ":" + minute);
+        }
+
+    }
+
     CheckBox c1,c2,c3,c4;
-    EditText t1, openTime, closeTime;
-    //TextView mLocation;
+    EditText t1, openTime, closeTime, co1, co2, co3, co4, cc1, cc2, cc3, cc4;
+    SetTime open, close, o1, o2, o3, o4, ct1, ct2, ct3, ct4;
 
     LocationManager locationManager;
     LocationListener locationListener;
@@ -74,36 +106,48 @@ public class SignUp2Activity extends AppCompatActivity {
         openTime.setInputType(InputType.TYPE_NULL);
         closeTime = (EditText)findViewById(R.id.closeTime);
         closeTime.setInputType(InputType.TYPE_NULL);
+        co1 = (EditText)findViewById(R.id.open1);
+        co1.setInputType(InputType.TYPE_NULL);
+        co2 = (EditText)findViewById(R.id.open2);
+        co2.setInputType(InputType.TYPE_NULL);
+        co3 = (EditText)findViewById(R.id.open3);
+        co3.setInputType(InputType.TYPE_NULL);
+        co4 = (EditText)findViewById(R.id.open4);
+        co4.setInputType(InputType.TYPE_NULL);
+        cc1 = (EditText)findViewById(R.id.close1);
+        cc1.setInputType(InputType.TYPE_NULL);
+        cc2 = (EditText)findViewById(R.id.close2);
+        cc2.setInputType(InputType.TYPE_NULL);
+        cc3 = (EditText)findViewById(R.id.close3);
+        cc3.setInputType(InputType.TYPE_NULL);
+        cc4 = (EditText)findViewById(R.id.close4);
+        cc4.setInputType(InputType.TYPE_NULL);
+        open = new SetTime(openTime,this);
+        close = new SetTime(closeTime,this);
+        o1 = new SetTime(co1,this);
+        o2 = new SetTime(co2,this);
+        o3 = new SetTime(co3,this);
+        o4 = new SetTime(co4,this);
+        ct1 = new SetTime(cc1,this);
+        ct2 = new SetTime(cc2,this);
+        ct3 = new SetTime(cc3,this);
+        ct4 = new SetTime(cc4,this);
 
-        openTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(SignUp2Activity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        openTime.setText(String.format("%02d:%02d", hourOfDay, minutes));
-                    }
-                }, 0, 0, false);
-                timePickerDialog.show();
-            }
-        });
+//        openTime.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+//                TimePickerDialog timePickerDialog = new TimePickerDialog(SignUp2Activity.this, new TimePickerDialog.OnTimeSetListener() {
+//                    @Override
+//                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+//                        openTime.setText(String.format("%02d:%02d", hourOfDay, minutes));
+//                    }
+//                }, 0, 0, false);
+//                timePickerDialog.show();
+//            }
+//        });
 
-        closeTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(SignUp2Activity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        closeTime.setText(String.format("%02d:%02d", hourOfDay, minutes));
-                    }
-                }, 0, 0, false);
-                timePickerDialog.show();
-            }
-        });
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
@@ -205,6 +249,11 @@ public class SignUp2Activity extends AppCompatActivity {
     }
 
     public void submitDetails(View view) {
+        Boolean b1, b2, b3, b4;
+        b1 = c1.isChecked();
+        b2 = c2.isChecked();
+        b3 = c3.isChecked();
+        b4 = c4.isChecked();
         if(t1.getText().toString().matches("")){
             Toast.makeText(this, "Please Enter Hospital ID", Toast.LENGTH_SHORT).show();
         }
@@ -216,11 +265,6 @@ public class SignUp2Activity extends AppCompatActivity {
         }
         else{
             if(checkUnique(t1.getText().toString())){
-                Boolean b1, b2, b3, b4;
-                b1 = c1.isChecked();
-                b2 = c2.isChecked();
-                b3 = c3.isChecked();
-                b4 = c4.isChecked();
                 object.put("name", ParseUser.getCurrentUser().getUsername());
                 object.put("ID",t1.getText().toString());
                 object.put("open",openTime.getText().toString());

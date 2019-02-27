@@ -116,37 +116,109 @@
             android:textSize="20dp"
             android:text="Feature 1"/>
 
+        <EditText
+            android:id="@+id/open1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/checkBox1"
+            android:hint="Opening Time"
+            android:timePickerMode="spinner"/>
+
+        <EditText
+            android:id="@+id/close1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/checkBox1"
+            android:layout_marginLeft="150dp"
+            android:hint="Closing Time" />
+
         <CheckBox
             android:id="@+id/checkBox2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/checkBox1"
+            android:layout_below="@+id/close1"
             android:layout_marginTop="20dp"
             android:textSize="20dp"
             android:text="Feature 2"/>
+
+        <EditText
+            android:id="@+id/open2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/checkBox2"
+            android:hint="Opening Time"
+            android:timePickerMode="spinner"/>
+
+        <EditText
+            android:id="@+id/close2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/checkBox2"
+            android:layout_marginLeft="150dp"
+            android:hint="Closing Time" />
 
         <CheckBox
             android:id="@+id/checkBox3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/checkBox2"
+            android:layout_below="@+id/open2"
             android:layout_marginTop="20dp"
             android:textSize="20dp"
             android:text="Feature 3"/>
+
+        <EditText
+            android:id="@+id/open3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/checkBox3"
+            android:hint="Opening Time"
+            android:timePickerMode="spinner"/>
+
+        <EditText
+            android:id="@+id/close3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/checkBox3"
+            android:layout_marginLeft="150dp"
+            android:hint="Closing Time" />
 
         <CheckBox
             android:id="@+id/checkBox4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/checkBox3"
+            android:layout_below="@+id/open3"
             android:layout_marginTop="20dp"
             android:textSize="20dp"
             android:text="Feature 4"/>
 
+        <EditText
+            android:id="@+id/open4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/checkBox4"
+            android:hint="Opening Time"
+            android:timePickerMode="spinner"/>
+
+        <EditText
+            android:id="@+id/close4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/checkBox4"
+            android:layout_marginLeft="150dp"
+            android:hint="Closing Time" />
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/checkBox4"
+            android:layout_below="@id/open4"
             android:layout_centerHorizontal="true"
             android:text="Submit Details"
             android:id="@+id/submitButton"
