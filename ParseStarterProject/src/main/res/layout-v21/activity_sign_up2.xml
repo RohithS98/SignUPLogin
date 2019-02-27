@@ -64,7 +64,7 @@
             android:layout_below="@id/closeTime"
             android:text=""
             android:id="@+id/curLat"
-            android:textSize="18dp"
+            android:textSize="15dp"
             android:layout_marginTop="10dp" />
 
         <TextView
@@ -74,7 +74,7 @@
             android:text=""
             android:layout_marginLeft="250dp"
             android:id="@+id/curLong"
-            android:textSize="18dp"
+            android:textSize="15dp"
             android:layout_marginTop="10dp" />
 
         <Button

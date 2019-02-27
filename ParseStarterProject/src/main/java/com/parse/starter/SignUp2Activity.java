@@ -112,14 +112,13 @@ public class SignUp2Activity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
 
-
-
                 Log.i("Location-Latitude", String.valueOf(location.getLatitude()));
                 Log.i("Location-Longitude", String.valueOf(location.getLongitude()));
                 Lat = String.valueOf(location.getLatitude());
                 Long = String.valueOf(location.getLongitude());
                 lat1.setText(Lat);
                 long1.setText(Long);
+                Toast.makeText(SignUp2Activity.this, "Location Updated", Toast.LENGTH_SHORT);
                 locationManager.removeUpdates(this);
 
             }
@@ -160,6 +159,8 @@ public class SignUp2Activity extends AppCompatActivity {
                         c2.setChecked(object.getBoolean("b2"));
                         c3.setChecked(object.getBoolean("b3"));
                         c4.setChecked(object.getBoolean("b4"));
+                        Lat = object.getString("Latitude");
+                        Long = object.getString("Longitude");
                         lat1.setText(object.getString("Latitude"));
                         long1.setText(object.getString("Longitude"));
                     }
@@ -185,6 +186,24 @@ public class SignUp2Activity extends AppCompatActivity {
         }
     }
 
+    protected boolean checkUnique(String id){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Hospital");
+        query.whereEqualTo("ID",id);
+        query.whereNotEqualTo("name", ParseUser.getCurrentUser().getUsername());
+        List<ParseObject> objs;
+        try{
+            objs = query.find();
+        }
+        catch(com.parse.ParseException e1){
+            Log.i("Parse error",e1.getMessage());
+            return false;
+        }
+        if(objs.size() > 0){
+            return false;
+        }
+        return true;
+    }
+
     public void submitDetails(View view) {
         if(t1.getText().toString().matches("")){
             Toast.makeText(this, "Please Enter Hospital ID", Toast.LENGTH_SHORT).show();
@@ -196,34 +215,39 @@ public class SignUp2Activity extends AppCompatActivity {
             Toast.makeText(this, "Please Enter Closing Time", Toast.LENGTH_SHORT).show();
         }
         else{
-            Boolean b1, b2, b3, b4;
-            b1 = c1.isChecked();
-            b2 = c2.isChecked();
-            b3 = c3.isChecked();
-            b4 = c4.isChecked();
-            object.put("name", ParseUser.getCurrentUser().getUsername());
-            object.put("ID",t1.getText().toString());
-            object.put("open",openTime.getText().toString());
-            object.put("close",closeTime.getText().toString());
-            object.put("b1",b1);
-            object.put("b2",b2);
-            object.put("b3",b3);
-            object.put("b4",b4);
-            object.put("Latitude",Lat);
-            object.put("Longitude",Long);
-            object.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if(e == null){
-                        Toast.makeText(SignUp2Activity.this, "Successful Update", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(SignUp2Activity.this, HospitalScreenActivity.class);
-                        startActivity(intent);
+            if(checkUnique(t1.getText().toString())){
+                Boolean b1, b2, b3, b4;
+                b1 = c1.isChecked();
+                b2 = c2.isChecked();
+                b3 = c3.isChecked();
+                b4 = c4.isChecked();
+                object.put("name", ParseUser.getCurrentUser().getUsername());
+                object.put("ID",t1.getText().toString());
+                object.put("open",openTime.getText().toString());
+                object.put("close",closeTime.getText().toString());
+                object.put("b1",b1);
+                object.put("b2",b2);
+                object.put("b3",b3);
+                object.put("b4",b4);
+                object.put("Latitude",Lat);
+                object.put("Longitude",Long);
+                object.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e == null){
+                            Toast.makeText(SignUp2Activity.this, "Successful Update", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(SignUp2Activity.this, HospitalScreenActivity.class);
+                            startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(SignUp2Activity.this, "Error! Please Submit Again", Toast.LENGTH_SHORT);
+                        }
                     }
-                    else{
-                        Toast.makeText(SignUp2Activity.this, "Error! Please Submit Again", Toast.LENGTH_SHORT);
-                    }
-                }
-            });
+                });
+            }
+            else{
+                Toast.makeText(SignUp2Activity.this, "Hospital ID already exists", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
