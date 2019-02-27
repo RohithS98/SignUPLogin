@@ -45,12 +45,14 @@ public class SignUp2Activity extends AppCompatActivity {
         private EditText editText;
         private Calendar myCalendar;
         private Context ctx;
+        private CheckBox cb;
 
-        public SetTime(EditText editText, Context ctx){
+        public SetTime(EditText editText, Context ctx, CheckBox cb){
             this.editText = editText;
             this.ctx = ctx;
             this.editText.setOnFocusChangeListener(this);
             this.myCalendar = Calendar.getInstance();
+            this.cb = cb;
         }
 
         @Override
@@ -58,17 +60,40 @@ public class SignUp2Activity extends AppCompatActivity {
             if(hasFocus){
                 InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
-                int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
-                int minute = myCalendar.get(Calendar.MINUTE);
-                new TimePickerDialog(this.ctx, this, hour, minute, false).show();
+                if(cb == null || cb.isChecked()){
+                    int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
+                    int minute = myCalendar.get(Calendar.MINUTE);
+                    new TimePickerDialog(this.ctx, this, hour, minute, false).show();
+                }
             }
         }
 
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            this.editText.setText( hourOfDay + ":" + minute);
+            this.editText.setText(String.format("%02d:%02d", hourOfDay, minute));
         }
 
+    }
+
+    public class checkBoxLink implements View.OnClickListener{
+
+        private CheckBox cb;
+        private EditText ed1, ed2;
+
+        public checkBoxLink(CheckBox cb, EditText ed1, EditText ed2){
+            this.cb = cb;
+            this.cb.setOnClickListener(this);
+            this.ed1 = ed1;
+            this.ed2 = ed2;
+        }
+
+        @Override
+        public void onClick(View v){
+            if(!cb.isChecked()){
+                ed1.setText("");
+                ed2.setText("");
+            }
+        }
     }
 
     CheckBox c1,c2,c3,c4;
@@ -122,37 +147,20 @@ public class SignUp2Activity extends AppCompatActivity {
         cc3.setInputType(InputType.TYPE_NULL);
         cc4 = (EditText)findViewById(R.id.close4);
         cc4.setInputType(InputType.TYPE_NULL);
-        open = new SetTime(openTime,this);
-        close = new SetTime(closeTime,this);
-        o1 = new SetTime(co1,this);
-        o2 = new SetTime(co2,this);
-        o3 = new SetTime(co3,this);
-        o4 = new SetTime(co4,this);
-        ct1 = new SetTime(cc1,this);
-        ct2 = new SetTime(cc2,this);
-        ct3 = new SetTime(cc3,this);
-        ct4 = new SetTime(cc4,this);
-
-//        openTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-//                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
-//                TimePickerDialog timePickerDialog = new TimePickerDialog(SignUp2Activity.this, new TimePickerDialog.OnTimeSetListener() {
-//                    @Override
-//                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-//                        openTime.setText(String.format("%02d:%02d", hourOfDay, minutes));
-//                    }
-//                }, 0, 0, false);
-//                timePickerDialog.show();
-//            }
-//        });
-
+        open = new SetTime(openTime,this, null);
+        close = new SetTime(closeTime,this, null);
+        o1 = new SetTime(co1,this, c1);
+        o2 = new SetTime(co2,this, c2);
+        o3 = new SetTime(co3,this, c3);
+        o4 = new SetTime(co4,this, c4);
+        ct1 = new SetTime(cc1,this, c1);
+        ct2 = new SetTime(cc2,this, c2);
+        ct3 = new SetTime(cc3,this, c3);
+        ct4 = new SetTime(cc4,this, c4);
+        checkBoxLink cl1 = new checkBoxLink(c1,co1,cc1), cl2 = new checkBoxLink(c2,co2,cc2), cl3 = new checkBoxLink(c3,co3,cc3), cl4 = new checkBoxLink(c4,co4,cc4);
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
         locationListener = new LocationListener() {
-
             @Override
             public void onLocationChanged(Location location) {
 
@@ -162,7 +170,7 @@ public class SignUp2Activity extends AppCompatActivity {
                 Long = String.valueOf(location.getLongitude());
                 lat1.setText(Lat);
                 long1.setText(Long);
-                Toast.makeText(SignUp2Activity.this, "Location Updated", Toast.LENGTH_SHORT);
+                Toast.makeText(SignUp2Activity.this, "Location Updated", Toast.LENGTH_SHORT).show();
                 locationManager.removeUpdates(this);
 
             }
@@ -207,11 +215,18 @@ public class SignUp2Activity extends AppCompatActivity {
                         Long = object.getString("Longitude");
                         lat1.setText(object.getString("Latitude"));
                         long1.setText(object.getString("Longitude"));
+                        co1.setText(object.getString("open1"));
+                        co2.setText(object.getString("open2"));
+                        co3.setText(object.getString("open3"));
+                        co4.setText(object.getString("open4"));
+                        cc1.setText(object.getString("close1"));
+                        cc2.setText(object.getString("close2"));
+                        cc3.setText(object.getString("close3"));
+                        cc4.setText(object.getString("close4"));
                     }
                     else{
                         Log.i("Parse stuff","New User");
                         object = new ParseObject("Hospital");
-                        lat1.setText("Hello");
                         getLoc(findViewById(R.id.outer));
                     }
                 }
@@ -242,10 +257,31 @@ public class SignUp2Activity extends AppCompatActivity {
             Log.i("Parse error",e1.getMessage());
             return false;
         }
-        if(objs.size() > 0){
-            return false;
+        return objs.size() == 0;
+    }
+
+    protected boolean checkBoxVerify(){
+        if(c1.isChecked()){
+            if(co1.getText().toString().matches("") || cc1.getText().toString().matches("")){
+                return true;
+            }
         }
-        return true;
+        if(c2.isChecked()){
+            if(co2.getText().toString().matches("") || cc2.getText().toString().matches("")){
+                return true;
+            }
+        }
+        if(c3.isChecked()){
+            if(co3.getText().toString().matches("") || cc3.getText().toString().matches("")){
+                return true;
+            }
+        }
+        if(c4.isChecked()){
+            if(co4.getText().toString().matches("") || cc4.getText().toString().matches("")){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void submitDetails(View view) {
@@ -263,16 +299,30 @@ public class SignUp2Activity extends AppCompatActivity {
         else if(closeTime.getText().toString().matches("")){
             Toast.makeText(this, "Please Enter Closing Time", Toast.LENGTH_SHORT).show();
         }
+        else if(checkBoxVerify()){
+            Toast.makeText(this, "Please Enter the Opening and Closing Time for Relevant facilities", Toast.LENGTH_LONG).show();
+        }
         else{
             if(checkUnique(t1.getText().toString())){
                 object.put("name", ParseUser.getCurrentUser().getUsername());
                 object.put("ID",t1.getText().toString());
                 object.put("open",openTime.getText().toString());
                 object.put("close",closeTime.getText().toString());
+
                 object.put("b1",b1);
                 object.put("b2",b2);
                 object.put("b3",b3);
                 object.put("b4",b4);
+
+                object.put("open1",co1.getText().toString());
+                object.put("close1",cc1.getText().toString());
+                object.put("open2",co2.getText().toString());
+                object.put("close2",cc2.getText().toString());
+                object.put("open3",co3.getText().toString());
+                object.put("close3",cc3.getText().toString());
+                object.put("open4",co4.getText().toString());
+                object.put("close4",cc4.getText().toString());
+
                 object.put("Latitude",Lat);
                 object.put("Longitude",Long);
                 object.saveInBackground(new SaveCallback() {
@@ -284,7 +334,7 @@ public class SignUp2Activity extends AppCompatActivity {
                             startActivity(intent);
                         }
                         else{
-                            Toast.makeText(SignUp2Activity.this, "Error! Please Submit Again", Toast.LENGTH_SHORT);
+                            Toast.makeText(SignUp2Activity.this, "Error! Please Submit Again", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
